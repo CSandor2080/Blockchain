@@ -41,7 +41,7 @@ def redirect():
 
 app.include_router(WALLET_BALANCE_ROUTER)
 app.include_router(LOYALTY_POINTS_ROUTER)
-app.include_router(BEVERAGE_ROUTER)
+#app.include_router(BEVERAGE_ROUTER)
 
 
 if __name__ == "__main__":
@@ -49,4 +49,5 @@ if __name__ == "__main__":
         host='127.0.0.1',
         port=8080,
         app="main:app",
+        reload=True
     )

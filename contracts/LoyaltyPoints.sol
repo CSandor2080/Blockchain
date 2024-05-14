@@ -24,8 +24,9 @@ contract LoyaltyPoints is RewardSystem {
         _;
     }
 
-    constructor() {
-        owner = msg.sender;
+    constructor(address _owner, address _beverageContractAddress) {
+        owner = _owner;
+        beverageContractAddress = _beverageContractAddress;
     }
 
     function setBeverageContract(address _address) public onlyOwner {
@@ -45,5 +46,9 @@ contract LoyaltyPoints is RewardSystem {
 
     function getPointsBalance(address customer) public view returns (uint256) {
         return pointsBalance[customer];
+    }
+
+    function getBvAddress() public view returns (address) {
+        return beverageContractAddress;
     }
 }

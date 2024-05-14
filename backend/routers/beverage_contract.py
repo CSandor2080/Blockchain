@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from web3.exceptions import ContractLogicError
+from web3.exceptions import ContractLogicError, TransactionNotFound, TimeExhausted
 from routers.common import (
     w3,
     LOYALTY_POINTS_CONTRACT_ADDRESS,
@@ -10,21 +10,19 @@ from routers.common import (
 
 app = APIRouter()
 
-def execute_transaction(contract, function, *args):
-    try:
-        tx_hash = function(*args).transact({'from': BEVERAGE_CONTRACT_ADDRESS})
-        tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
-        return {"status": "success", "transaction_receipt": tx_receipt}
-    except ContractLogicError as e:
-        raise HTTPException(status_code=400, detail=f"Contract error: {str(e)}")
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Server error: {str(e)}")
-
 @app.post("/purchase-beverage/{customer_address}")
 def purchase_beverage(customer_address: str):
     try:
         contract = w3.eth.contract(address=BEVERAGE_CONTRACT_ADDRESS, abi=BEVERAGE_ABI)
-        return execute_transaction(contract, contract.functions.purchase, customer_address)
+        tx_hash = contract.functions.purchase(customer_address).transact({
+            'from': w3.eth.accounts[0],
+            'gas': 500000,
+            'gasPrice': w3.to_wei('20', 'gwei')
+        })
+        tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
+        # if tx_receipt.status == 0:
+        #     raise HTTPException(status_code=500, detail="Transaction failed to execute.")
+        return {"status": "success", "transaction_receipt": str(tx_receipt)}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Server error: {str(e)}")
 
@@ -32,7 +30,15 @@ def purchase_beverage(customer_address: str):
 def redeem_beverage(customer_address: str, points: int):
     try:
         contract = w3.eth.contract(address=BEVERAGE_CONTRACT_ADDRESS, abi=BEVERAGE_ABI)
-        return execute_transaction(contract, contract.functions.redeem, customer_address, points)
+        tx_hash = contract.functions.redeem(customer_address, points).transact({
+            'from': w3.eth.accounts[0],
+            'gas': 500000,
+            'gasPrice': w3.to_wei('20', 'gwei')
+        })
+        tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
+        if tx_receipt.status == 0:
+            raise HTTPException(status_code=500, detail="Transaction failed to execute.")
+        return {"status": "success", "transaction_receipt": str(tx_receipt)}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Server error: {str(e)}")
 

@@ -52,15 +52,15 @@
     "absolutePath": "project:/contracts/RewardSystem.sol",
     "exportedSymbols": {
       "RewardSystem": [
-        289
+        316
       ]
     },
-    "id": 290,
+    "id": 317,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 274,
+        "id": 301,
         "literals": [
           "solidity",
           "^",
@@ -77,9 +77,9 @@
         "contractDependencies": [],
         "contractKind": "interface",
         "fullyImplemented": false,
-        "id": 289,
+        "id": 316,
         "linearizedBaseContracts": [
-          289
+          316
         ],
         "name": "RewardSystem",
         "nameLocation": "70:12:4",
@@ -87,7 +87,7 @@
         "nodes": [
           {
             "functionSelector": "da20569e",
-            "id": 281,
+            "id": 308,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
@@ -95,17 +95,17 @@
             "nameLocation": "99:11:4",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 279,
+              "id": 306,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 276,
+                  "id": 303,
                   "mutability": "mutable",
                   "name": "customer",
                   "nameLocation": "119:8:4",
                   "nodeType": "VariableDeclaration",
-                  "scope": 281,
+                  "scope": 308,
                   "src": "111:16:4",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -114,7 +114,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 275,
+                    "id": 302,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "111:7:4",
@@ -128,12 +128,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 278,
+                  "id": 305,
                   "mutability": "mutable",
                   "name": "points",
                   "nameLocation": "137:6:4",
                   "nodeType": "VariableDeclaration",
-                  "scope": 281,
+                  "scope": 308,
                   "src": "129:14:4",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -142,7 +142,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 277,
+                    "id": 304,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "129:7:4",
@@ -157,12 +157,12 @@
               "src": "110:34:4"
             },
             "returnParameters": {
-              "id": 280,
+              "id": 307,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "153:0:4"
             },
-            "scope": 289,
+            "scope": 316,
             "src": "90:64:4",
             "stateMutability": "nonpayable",
             "virtual": false,
@@ -170,7 +170,7 @@
           },
           {
             "functionSelector": "b85da8d2",
-            "id": 288,
+            "id": 315,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
@@ -178,17 +178,17 @@
             "nameLocation": "169:12:4",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 286,
+              "id": 313,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 283,
+                  "id": 310,
                   "mutability": "mutable",
                   "name": "customer",
                   "nameLocation": "190:8:4",
                   "nodeType": "VariableDeclaration",
-                  "scope": 288,
+                  "scope": 315,
                   "src": "182:16:4",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -197,7 +197,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 282,
+                    "id": 309,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "182:7:4",
@@ -211,12 +211,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 285,
+                  "id": 312,
                   "mutability": "mutable",
                   "name": "points",
                   "nameLocation": "208:6:4",
                   "nodeType": "VariableDeclaration",
-                  "scope": 288,
+                  "scope": 315,
                   "src": "200:14:4",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -225,7 +225,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 284,
+                    "id": 311,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "200:7:4",
@@ -240,19 +240,19 @@
               "src": "181:34:4"
             },
             "returnParameters": {
-              "id": 287,
+              "id": 314,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "224:0:4"
             },
-            "scope": 289,
+            "scope": 316,
             "src": "160:65:4",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           }
         ],
-        "scope": 290,
+        "scope": 317,
         "src": "60:168:4",
         "usedErrors": [],
         "usedEvents": []
@@ -266,7 +266,7 @@
   },
   "networks": {},
   "schemaVersion": "3.4.16",
-  "updatedAt": "2024-05-12T00:17:31.487Z",
+  "updatedAt": "2024-05-14T09:38:36.387Z",
   "devdoc": {
     "kind": "dev",
     "methods": {},

@@ -8,8 +8,8 @@ import uvicorn
 from web3 import Web3
 import json
 # Contract Addresses (set these after you deploy your contracts)
-LOYALTY_POINTS_CONTRACT_ADDRESS = '0xa881c83a92968FCe612f68A7334BC068c945eA2b'
-BEVERAGE_CONTRACT_ADDRESS = '0xd52bE6158f6122C7116cdC23a7ccf71570B8f750'
+LOYALTY_POINTS_CONTRACT_ADDRESS = '0x0fCb8a68C6C41ae010318c0f103a203e913EA964'
+BEVERAGE_CONTRACT_ADDRESS = '0x838e86C72b468E90975f9b653A4Bf690f169019b'
 
 # Load contract ABIs
 loyal_file_path = str(pathlib.Path(dirname(realpath(__file__)) + "/../../" +"build/contracts/LoyaltyPoints.json" ).resolve())
@@ -31,3 +31,13 @@ if not w3.is_connected():
 else:
     print("Connected successfully...")
 
+import ipfshttpclient
+
+def upload_to_ipfs(data):
+    client = ipfshttpclient.connect('/dns/localhost/tcp/5001/http')
+    res = client.add_bytes(data.encode('utf-8'))
+    return res['Hash']
+
+def get_from_ipfs(ipfs_hash):
+    client = ipfshttpclient.connect('/dns/localhost/tcp/5001/http')
+    return client.cat(ipfs_hash).decode('utf-8')

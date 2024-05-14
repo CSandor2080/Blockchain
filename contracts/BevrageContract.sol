@@ -13,8 +13,12 @@ contract BeverageContract is IBeverage {
         _;
     }
 
-    constructor(address _loyaltySystem) {
-        owner = msg.sender;
+    constructor(address _owner, address _loyaltySystem) {
+        owner = _owner;
+        loyaltySystem = RewardSystem(_loyaltySystem);
+    }
+
+    function setLoyaltySystem(address _loyaltySystem) public onlyOwner {
         loyaltySystem = RewardSystem(_loyaltySystem);
     }
 
@@ -24,8 +28,11 @@ contract BeverageContract is IBeverage {
     }
 
     function redeem(address customer, uint points) external override {
-        require(msg.sender == address(loyaltySystem), "Unauthorized access");
         require(points >= 10, "At least 10 points are required to redeem a beverage");
         loyaltySystem.redeemPoints(customer, 10); // Redeem points for a beverage
+    }
+
+    function getOwner() public view returns (address) {
+        return owner;
     }
 }
