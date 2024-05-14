@@ -4911,7 +4911,7 @@
         143
       ],
       "RewardSystem": [
-        316
+        315
       ]
     },
     "id": 129,
@@ -4948,7 +4948,7 @@
         "nameLocation": "-1:-1:-1",
         "nodeType": "ImportDirective",
         "scope": 129,
-        "sourceUnit": 317,
+        "sourceUnit": 316,
         "src": "87:28:1",
         "symbolAliases": [],
         "unitAlias": ""
@@ -5025,7 +5025,7 @@
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_contract$_RewardSystem_$316",
+              "typeIdentifier": "t_contract$_RewardSystem_$315",
               "typeString": "contract RewardSystem"
             },
             "typeName": {
@@ -5038,13 +5038,13 @@
                   "193:12:1"
                 ],
                 "nodeType": "IdentifierPath",
-                "referencedDeclaration": 316,
+                "referencedDeclaration": 315,
                 "src": "193:12:1"
               },
-              "referencedDeclaration": 316,
+              "referencedDeclaration": 315,
               "src": "193:12:1",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_RewardSystem_$316",
+                "typeIdentifier": "t_contract$_RewardSystem_$315",
                 "typeString": "contract RewardSystem"
               }
             },
@@ -5263,7 +5263,7 @@
                       "referencedDeclaration": 27,
                       "src": "454:13:1",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_RewardSystem_$316",
+                        "typeIdentifier": "t_contract$_RewardSystem_$315",
                         "typeString": "contract RewardSystem"
                       }
                     },
@@ -5295,10 +5295,10 @@
                         "name": "RewardSystem",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 316,
+                        "referencedDeclaration": 315,
                         "src": "470:12:1",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_type$_t_contract$_RewardSystem_$316_$",
+                          "typeIdentifier": "t_type$_t_contract$_RewardSystem_$315_$",
                           "typeString": "type(contract RewardSystem)"
                         }
                       },
@@ -5314,13 +5314,13 @@
                       "src": "470:28:1",
                       "tryCall": false,
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_RewardSystem_$316",
+                        "typeIdentifier": "t_contract$_RewardSystem_$315",
                         "typeString": "contract RewardSystem"
                       }
                     },
                     "src": "454:44:1",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_RewardSystem_$316",
+                      "typeIdentifier": "t_contract$_RewardSystem_$315",
                       "typeString": "contract RewardSystem"
                     }
                   },
@@ -5433,7 +5433,7 @@
                       "referencedDeclaration": 27,
                       "src": "592:13:1",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_RewardSystem_$316",
+                        "typeIdentifier": "t_contract$_RewardSystem_$315",
                         "typeString": "contract RewardSystem"
                       }
                     },
@@ -5465,10 +5465,10 @@
                         "name": "RewardSystem",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 316,
+                        "referencedDeclaration": 315,
                         "src": "608:12:1",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_type$_t_contract$_RewardSystem_$316_$",
+                          "typeIdentifier": "t_type$_t_contract$_RewardSystem_$315_$",
                           "typeString": "type(contract RewardSystem)"
                         }
                       },
@@ -5484,13 +5484,13 @@
                       "src": "608:28:1",
                       "tryCall": false,
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_RewardSystem_$316",
+                        "typeIdentifier": "t_contract$_RewardSystem_$315",
                         "typeString": "contract RewardSystem"
                       }
                     },
                     "src": "592:44:1",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_RewardSystem_$316",
+                      "typeIdentifier": "t_contract$_RewardSystem_$315",
                       "typeString": "contract RewardSystem"
                     }
                   },
@@ -5805,7 +5805,7 @@
                         "referencedDeclaration": 27,
                         "src": "806:13:1",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_RewardSystem_$316",
+                          "typeIdentifier": "t_contract$_RewardSystem_$315",
                           "typeString": "contract RewardSystem"
                         }
                       },
@@ -5817,7 +5817,7 @@
                       "memberLocation": "820:11:1",
                       "memberName": "issuePoints",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 308,
+                      "referencedDeclaration": 307,
                       "src": "806:25:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_address_$_t_uint256_$returns$__$",
@@ -6078,7 +6078,7 @@
                         "referencedDeclaration": 27,
                         "src": "1075:13:1",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_RewardSystem_$316",
+                          "typeIdentifier": "t_contract$_RewardSystem_$315",
                           "typeString": "contract RewardSystem"
                         }
                       },
@@ -6090,7 +6090,7 @@
                       "memberLocation": "1089:12:1",
                       "memberName": "redeemPoints",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 315,
+                      "referencedDeclaration": 314,
                       "src": "1075:26:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_address_$_t_uint256_$returns$__$",
@@ -6328,7 +6328,8 @@
     }
   },
   "schemaVersion": "3.4.16",
-  "updatedAt": "2024-05-14T09:38:36.376Z",
+  "updatedAt": "2024-05-14T12:25:42.922Z",
+  "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",
     "methods": {},

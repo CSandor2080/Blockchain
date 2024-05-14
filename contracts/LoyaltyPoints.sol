@@ -7,48 +7,43 @@ import "./AddressLib.sol";
 contract LoyaltyPoints is RewardSystem {
     using AddressLib for address;
 
-    mapping(address => uint256) public pointsBalance;
-    address private owner;
-    address private beverageContractAddress;
+    struct PointsData {
+        uint256 points;
+        string ipfsHash;
+    }
 
-    event PointsIssued(address indexed customer, uint points);
-    event PointsRedeemed(address indexed customer, uint points);
+    mapping(address => PointsData) public pointsBalance;
+    address private owner;
+
+    event PointsIssued(address indexed customer, uint256 points, string ipfsHash);
+    event PointsRedeemed(address indexed customer, uint256 points, string ipfsHash);
 
     modifier onlyOwner() {
         require(owner.isOwner(msg.sender), "Only the owner can perform this action");
         _;
     }
 
-    modifier onlyBeverageContract() {
-        require(msg.sender == beverageContractAddress, "Unauthorized access");
-        _;
-    }
 
-    constructor(address _owner, address _beverageContractAddress) {
+    constructor(address _owner) {
         owner = _owner;
-        beverageContractAddress = _beverageContractAddress;
     }
 
-    function setBeverageContract(address _address) public onlyOwner {
-        beverageContractAddress = _address;
+    // Implementing RewardSystem interface
+    function issuePoints(address customer, uint256 points, string calldata ipfsHash) override external onlyOwner {
+        pointsBalance[customer].points += points;
+        pointsBalance[customer].ipfsHash = ipfsHash;
+        emit PointsIssued(customer, points, ipfsHash);
     }
 
-    function issuePoints(address customer, uint256 points) override external onlyBeverageContract {
-        pointsBalance[customer] += points;
-        emit PointsIssued(customer, points);
+    function redeemPoints(address customer, uint256 points, string calldata ipfsHash) override external onlyOwner {
+        require(pointsBalance[customer].points >= points, "Insufficient points");
+        pointsBalance[customer].points -= points;
+        pointsBalance[customer].ipfsHash = ipfsHash;
+        emit PointsRedeemed(customer, points, ipfsHash);
     }
 
-    function redeemPoints(address customer, uint256 points) override external onlyBeverageContract {
-        require(pointsBalance[customer] >= points, "Insufficient points");
-        pointsBalance[customer] -= points;
-        emit PointsRedeemed(customer, points);
-    }
-
-    function getPointsBalance(address customer) public view returns (uint256) {
-        return pointsBalance[customer];
-    }
-
-    function getBvAddress() public view returns (address) {
-        return beverageContractAddress;
+    function getPointsBalance(address customer) public view returns (uint256, string memory) {
+        PointsData memory data = pointsBalance[customer];
+        return (data.points, data.ipfsHash);
     }
 }

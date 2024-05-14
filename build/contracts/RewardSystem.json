@@ -12,6 +12,11 @@
           "internalType": "uint256",
           "name": "points",
           "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "ipfsHash",
+          "type": "string"
         }
       ],
       "name": "issuePoints",
@@ -30,6 +35,11 @@
           "internalType": "uint256",
           "name": "points",
           "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "ipfsHash",
+          "type": "string"
         }
       ],
       "name": "redeemPoints",
@@ -38,7 +48,7 @@
       "type": "function"
     }
   ],
-  "metadata": "{\"compiler\":{\"version\":\"0.8.21+commit.d9974bed\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"customer\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"points\",\"type\":\"uint256\"}],\"name\":\"issuePoints\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"customer\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"points\",\"type\":\"uint256\"}],\"name\":\"redeemPoints\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/RewardSystem.sol\":\"RewardSystem\"},\"evmVersion\":\"shanghai\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/RewardSystem.sol\":{\"keccak256\":\"0xe9befeefa01b554de1fb1c41b3d9a655ab36dabb62293e7934ed63948446b26f\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://4f033873e0380dbe8483100017e52eab10f17041f9fca76d77dd2a31035e4964\",\"dweb:/ipfs/QmbDBYxuwQKs9VsRk4udFufgMHMbHeTS2bTSTPrRggT1jk\"]}},\"version\":1}",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.21+commit.d9974bed\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"customer\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"points\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"ipfsHash\",\"type\":\"string\"}],\"name\":\"issuePoints\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"customer\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"points\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"ipfsHash\",\"type\":\"string\"}],\"name\":\"redeemPoints\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/RewardSystem.sol\":\"RewardSystem\"},\"evmVersion\":\"shanghai\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/RewardSystem.sol\":{\"keccak256\":\"0x9262a4baad6c05d38c1436c37f18b9e4af44b11c21f9b339f67b61573a34f9de\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://ea66214df0e570dcc4cd5cbec7ac0c3198408c8fd60c597ad5d008028688c15d\",\"dweb:/ipfs/QmVRMgzWWij3rpnubJMQ3U3Af8i1VtibMf5gPVAfnnu274\"]}},\"version\":1}",
   "bytecode": "0x",
   "deployedBytecode": "0x",
   "immutableReferences": {},
@@ -46,21 +56,21 @@
   "deployedGeneratedSources": [],
   "sourceMap": "",
   "deployedSourceMap": "",
-  "source": "// SPDX-License-Identifier: MIT\r\npragma solidity ^0.8.0;\r\n\r\ninterface RewardSystem {\r\n    function issuePoints(address customer, uint256 points) external;\r\n    function redeemPoints(address customer, uint256 points) external;\r\n}\r\n",
+  "source": "// SPDX-License-Identifier: MIT\r\npragma solidity ^0.8.0;\r\n\r\ninterface RewardSystem {\r\n    function issuePoints(address customer, uint256 points, string calldata ipfsHash) external;\r\n    function redeemPoints(address customer, uint256 points, string calldata ipfsHash) external;\r\n}\r\n",
   "sourcePath": "C:\\Users\\Cristian\\Desktop\\Blockchain\\contracts\\RewardSystem.sol",
   "ast": {
     "absolutePath": "project:/contracts/RewardSystem.sol",
     "exportedSymbols": {
       "RewardSystem": [
-        316
+        197
       ]
     },
-    "id": 317,
+    "id": 198,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 301,
+        "id": 178,
         "literals": [
           "solidity",
           "^",
@@ -68,7 +78,7 @@
           ".0"
         ],
         "nodeType": "PragmaDirective",
-        "src": "33:23:4"
+        "src": "33:23:2"
       },
       {
         "abstract": false,
@@ -77,36 +87,36 @@
         "contractDependencies": [],
         "contractKind": "interface",
         "fullyImplemented": false,
-        "id": 316,
+        "id": 197,
         "linearizedBaseContracts": [
-          316
+          197
         ],
         "name": "RewardSystem",
-        "nameLocation": "70:12:4",
+        "nameLocation": "70:12:2",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
-            "functionSelector": "da20569e",
-            "id": 308,
+            "functionSelector": "f341bec0",
+            "id": 187,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "issuePoints",
-            "nameLocation": "99:11:4",
+            "nameLocation": "99:11:2",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 306,
+              "id": 185,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 303,
+                  "id": 180,
                   "mutability": "mutable",
                   "name": "customer",
-                  "nameLocation": "119:8:4",
+                  "nameLocation": "119:8:2",
                   "nodeType": "VariableDeclaration",
-                  "scope": 308,
-                  "src": "111:16:4",
+                  "scope": 187,
+                  "src": "111:16:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -114,10 +124,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 302,
+                    "id": 179,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "111:7:4",
+                    "src": "111:7:2",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -128,13 +138,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 305,
+                  "id": 182,
                   "mutability": "mutable",
                   "name": "points",
-                  "nameLocation": "137:6:4",
+                  "nameLocation": "137:6:2",
                   "nodeType": "VariableDeclaration",
-                  "scope": 308,
-                  "src": "129:14:4",
+                  "scope": 187,
+                  "src": "129:14:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -142,54 +152,81 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 304,
+                    "id": 181,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "129:7:4",
+                    "src": "129:7:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     }
                   },
                   "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 184,
+                  "mutability": "mutable",
+                  "name": "ipfsHash",
+                  "nameLocation": "161:8:2",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 187,
+                  "src": "145:24:2",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_calldata_ptr",
+                    "typeString": "string"
+                  },
+                  "typeName": {
+                    "id": 183,
+                    "name": "string",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "145:6:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_string_storage_ptr",
+                      "typeString": "string"
+                    }
+                  },
+                  "visibility": "internal"
                 }
               ],
-              "src": "110:34:4"
+              "src": "110:60:2"
             },
             "returnParameters": {
-              "id": 307,
+              "id": 186,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "153:0:4"
+              "src": "179:0:2"
             },
-            "scope": 316,
-            "src": "90:64:4",
+            "scope": 197,
+            "src": "90:90:2",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           },
           {
-            "functionSelector": "b85da8d2",
-            "id": 315,
+            "functionSelector": "2a42a564",
+            "id": 196,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "redeemPoints",
-            "nameLocation": "169:12:4",
+            "nameLocation": "195:12:2",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 313,
+              "id": 194,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 310,
+                  "id": 189,
                   "mutability": "mutable",
                   "name": "customer",
-                  "nameLocation": "190:8:4",
+                  "nameLocation": "216:8:2",
                   "nodeType": "VariableDeclaration",
-                  "scope": 315,
-                  "src": "182:16:4",
+                  "scope": 196,
+                  "src": "208:16:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -197,10 +234,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 309,
+                    "id": 188,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "182:7:4",
+                    "src": "208:7:2",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -211,13 +248,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 312,
+                  "id": 191,
                   "mutability": "mutable",
                   "name": "points",
-                  "nameLocation": "208:6:4",
+                  "nameLocation": "234:6:2",
                   "nodeType": "VariableDeclaration",
-                  "scope": 315,
-                  "src": "200:14:4",
+                  "scope": 196,
+                  "src": "226:14:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -225,40 +262,67 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 311,
+                    "id": 190,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "200:7:4",
+                    "src": "226:7:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     }
                   },
                   "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 193,
+                  "mutability": "mutable",
+                  "name": "ipfsHash",
+                  "nameLocation": "258:8:2",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 196,
+                  "src": "242:24:2",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_calldata_ptr",
+                    "typeString": "string"
+                  },
+                  "typeName": {
+                    "id": 192,
+                    "name": "string",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "242:6:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_string_storage_ptr",
+                      "typeString": "string"
+                    }
+                  },
+                  "visibility": "internal"
                 }
               ],
-              "src": "181:34:4"
+              "src": "207:60:2"
             },
             "returnParameters": {
-              "id": 314,
+              "id": 195,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "224:0:4"
+              "src": "276:0:2"
             },
-            "scope": 316,
-            "src": "160:65:4",
+            "scope": 197,
+            "src": "186:91:2",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           }
         ],
-        "scope": 317,
-        "src": "60:168:4",
+        "scope": 198,
+        "src": "60:220:2",
         "usedErrors": [],
         "usedEvents": []
       }
     ],
-    "src": "33:197:4"
+    "src": "33:249:2"
   },
   "compiler": {
     "name": "solc",
@@ -266,7 +330,7 @@
   },
   "networks": {},
   "schemaVersion": "3.4.16",
-  "updatedAt": "2024-05-14T09:38:36.387Z",
+  "updatedAt": "2024-05-14T12:25:42.339Z",
   "devdoc": {
     "kind": "dev",
     "methods": {},

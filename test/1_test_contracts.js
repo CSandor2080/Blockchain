@@ -1,65 +1,84 @@
 const LoyaltyPoints = artifacts.require("LoyaltyPoints");
-const RewardSystem = artifacts.require("RewardSystem");
-const AddressLib = artifacts.require("AddressLib");
 
 contract("LoyaltyPoints", accounts => {
-  const [owner, beverageContract, customer, other] = accounts;
+    const owner = accounts[0];
+    const customer = accounts[1];
+    const anotherAccount = accounts[2];
 
-  let loyaltyPoints;
+    let loyaltyPoints;
 
-  beforeEach(async () => {
-    // Deploy libraries
-    const addressLib = await AddressLib.new();
-    // Link libraries
-    await LoyaltyPoints.link("AddressLib", addressLib.address);
-    // Deploy LoyaltyPoints contract
-    loyaltyPoints = await LoyaltyPoints.new(owner, beverageContract);
-  });
+    beforeEach(async () => {
+        loyaltyPoints = await LoyaltyPoints.new(owner);
+    });
 
-  it("should issue points to a customer", async () => {
-    await loyaltyPoints.issuePoints(customer, 100, { from: beverageContract });
-    const balance = await loyaltyPoints.getPointsBalance(customer);
-    assert.equal(balance.toNumber(), 100, "Points balance should be 100");
-  });
+    it("should be deployed and initialized with correct owner", async () => {
+        const contractOwner = accounts[0]
+        assert.equal(contractOwner, owner, "Owner is not set correctly");
+    });
 
-  it("should not issue points from non-beverage contract address", async () => {
-    try {
-      await loyaltyPoints.issuePoints(customer, 100, { from: other });
-      assert.fail("Expected revert not received");
-    } catch (error) {
-      assert(error.message.includes("Unauthorized access"), `Expected "Unauthorized access" but got ${error.message}`);
-    }
-  });
+    it("should not redeem more points than available", async () => {
+        const points = 50;
+        const redeemPoints = 100;
+        const ipfsHash = "QmHash";
 
-  it("should redeem points from a customer", async () => {
-    await loyaltyPoints.issuePoints(customer, 100, { from: beverageContract });
-    await loyaltyPoints.redeemPoints(customer, 50, { from: beverageContract });
-    const balance = await loyaltyPoints.getPointsBalance(customer);
-    assert.equal(balance.toNumber(), 50, "Points balance should be 50");
-  });
+        await loyaltyPoints.issuePoints(customer, points, ipfsHash, { from: owner });
 
-  it("should not redeem more points than available", async () => {
-    await loyaltyPoints.issuePoints(customer, 50, { from: beverageContract });
-    try {
-      await loyaltyPoints.redeemPoints(customer, 100, { from: beverageContract });
-      assert.fail("Expected revert not received");
-    } catch (error) {
-      assert(error.message.includes("Insufficient points"), `Expected "Insufficient points" but got ${error.message}`);
-    }
-  });
+        try {
+            await loyaltyPoints.redeemPoints(customer, redeemPoints, ipfsHash, { from: owner });
+            assert.fail("Redeemed more points than available");
+        } catch (error) {
+            assert(error.message.includes("Insufficient points"), "Expected insufficient points error");
+        }
+    });
 
-  it("should allow owner to set beverage contract address", async () => {
-    await loyaltyPoints.setBeverageContract(other, { from: owner });
-    const newAddress = await loyaltyPoints.getBvAddress();
-    assert.equal(newAddress, other, "Beverage contract address should be updated");
-  });
+    it("should not allow non-owner to issue points", async () => {
+        const points = 100;
+        const ipfsHash = "QmHash";
 
-  it("should not allow non-owner to set beverage contract address", async () => {
-    try {
-      await loyaltyPoints.setBeverageContract(other, { from: other });
-      assert.fail("Expected revert not received");
-    } catch (error) {
-      assert(error.message.includes("Only the owner can perform this action"), `Expected "Only the owner can perform this action" but got ${error.message}`);
-    }
-  });
+        try {
+            await loyaltyPoints.issuePoints(customer, points, ipfsHash, { from: anotherAccount });
+            assert.fail("Non-owner was able to issue points");
+        } catch (error) {
+            assert(error.message.includes("Only the owner can perform this action"), "Expected owner restriction error");
+        }
+    });
+
+    it("should not allow non-owner to redeem points", async () => {
+        const points = 50;
+        const ipfsHash = "QmHash";
+
+        try {
+            await loyaltyPoints.redeemPoints(customer, points, ipfsHash, { from: anotherAccount });
+            assert.fail("Non-owner was able to redeem points");
+        } catch (error) {
+            assert(error.message.includes("Only the owner can perform this action"), "Expected owner restriction error");
+        }
+    });
+
+    it("should emit PointsIssued event when points are issued", async () => {
+        const points = 100;
+        const ipfsHash = "QmHash";
+
+        const result = await loyaltyPoints.issuePoints(customer, points, ipfsHash, { from: owner });
+
+        assert.equal(result.logs.length, 1, "Expected one event to be emitted");
+        assert.equal(result.logs[0].event, "PointsIssued", "Expected PointsIssued event");
+        assert.equal(result.logs[0].args.customer, customer, "Customer address is incorrect in event");
+        assert.equal(result.logs[0].args.points.toNumber(), points, "Points value is incorrect in event");
+        assert.equal(result.logs[0].args.ipfsHash, ipfsHash, "IPFS hash is incorrect in event");
+    });
+
+    it("should emit PointsRedeemed event when points are redeemed", async () => {
+        const points = 100;
+        const ipfsHash = "QmHash";
+
+        await loyaltyPoints.issuePoints(customer, points, ipfsHash, { from: owner });
+        const result = await loyaltyPoints.redeemPoints(customer, points, ipfsHash, { from: owner });
+
+        assert.equal(result.logs.length, 1, "Expected one event to be emitted");
+        assert.equal(result.logs[0].event, "PointsRedeemed", "Expected PointsRedeemed event");
+        assert.equal(result.logs[0].args.customer, customer, "Customer address is incorrect in event");
+        assert.equal(result.logs[0].args.points.toNumber(), points, "Points value is incorrect in event");
+        assert.equal(result.logs[0].args.ipfsHash, ipfsHash, "IPFS hash is incorrect in event");
+    });
 });

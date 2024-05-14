@@ -8,7 +8,7 @@ import uvicorn
 from web3 import Web3
 import json
 # Contract Addresses (set these after you deploy your contracts)
-LOYALTY_POINTS_CONTRACT_ADDRESS = '0x03d323A852ec6fEEED455B8905a837B11D308205'
+LOYALTY_POINTS_CONTRACT_ADDRESS = '0xe3bAC079851324AB7Ff1729b06F3A2c5bc572c40'
 
 
 # Load contract ABIs

@@ -41,7 +41,7 @@ def redirect():
 
 app.include_router(WALLET_BALANCE_ROUTER)
 app.include_router(LOYALTY_POINTS_ROUTER)
-#app.include_router(BEVERAGE_ROUTER)
+
 
 
 if __name__ == "__main__":

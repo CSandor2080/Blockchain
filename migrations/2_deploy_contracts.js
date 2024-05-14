@@ -5,7 +5,7 @@ module.exports = async function (deployer, network, accounts) {
     const ownerAddress = accounts[0]; // Use the first account as the owner
 
     // Deploy LoyaltyPoints contract with a dummy address for beverageContractAddress
-    await deployer.deploy(LoyaltyPoints, ownerAddress, ownerAddress);
+    await deployer.deploy(LoyaltyPoints, ownerAddress);
     const loyaltyPointsInstance = await LoyaltyPoints.deployed();
 
     // Deploy BeverageContract with the address of the deployed LoyaltyPoints contract
