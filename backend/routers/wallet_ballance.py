@@ -1,7 +1,6 @@
 from fastapi import APIRouter
 from fastapi import HTTPException
-from routers.common import (w3, LOYALTY_POINTS_CONTRACT_ADDRESS,
-                  BEVERAGE_CONTRACT_ADDRESS, LOYALTY_POINTS_ABI,BEVERAGE_ABI)
+from routers.common import w3, LOYALTY_POINTS_CONTRACT_ADDRESS,LOYALTY_POINTS_ABI
 
 app = APIRouter()
 

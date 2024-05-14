@@ -13,7 +13,7 @@ sys.path.append(
 from fastapi.responses import RedirectResponse
 from fastapi import FastAPI, HTTPException, Path
 
-from routers.beverage_contract import BEVERAGE_ROUTER
+#from routers.beverage_contract import BEVERAGE_ROUTER
 from routers.loyalty_points import LOYALTY_POINTS_ROUTER
 from routers.wallet_ballance import WALLET_BALANCE_ROUTER
 from fastapi.middleware.cors import CORSMiddleware
