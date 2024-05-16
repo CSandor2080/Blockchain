@@ -1,0 +1,3 @@
+- Issue points mechanism using a coupon code
+- Shop class in solidity, inherits from Loyalty points, adds buy_product functionality which uses redeem/issue points
+- Implement eth transaction
