@@ -15,7 +15,8 @@ The application is in the development stage, at the moment, to run the applicati
 - `docker run -p 8545:8545 trufflesuite/ganache`
 - `docker run -d --name ipfs_host -p 5001:5001 ipfs/go-ipfs:v0.6.0`
 - `npm install` - Installing npm dependencies
-- `truffle migrate --network development`
+- `nom install -g truffle`
+- `truffle migrate --network development` (Move the Loyalty contract address in backend/routers/common in LOYALTY_POINTS_CONTRACT_ADDRESS)
 - `cd ./backend`
 - `pip install -r requirements.txt`
 - `python/python3 main.py`
