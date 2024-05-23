@@ -14,8 +14,8 @@ class Tags(enum.Enum):
     BALANCE = "Balance"
     IPFS= "IPFS"
 # Contract Addresses (set these after you deploy your contracts)
-LOYALTY_POINTS_CONTRACT_ADDRESS = '0x25092394F154123CbBc06E804179265e0296fCA9'
-SHOP_CONTRACT_ADDRESS = '0xE253f5E1220aAeA2EbB8023524aF549c4337B2Ec'
+LOYALTY_POINTS_CONTRACT_ADDRESS = '0xbD02851e74988a3DD64c81d3680835C24463eddA'
+SHOP_CONTRACT_ADDRESS = '0xc8098596f017dc6237395722a552C89A66C6Dc4C'
 
 # Load contract ABIs
 loyal_file_path = str(pathlib.Path(dirname(realpath(__file__)) + "/../../" +"build/contracts/LoyaltyPoints.json" ).resolve())

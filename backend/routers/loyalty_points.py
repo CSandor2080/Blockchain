@@ -1,8 +1,11 @@
 import json
+
 from fastapi import APIRouter, HTTPException
-from web3.exceptions import ContractLogicError, TransactionNotFound, TimeExhausted
+
+import ipfshttpclient
 from web3 import Web3, exceptions
-import json
+from web3.exceptions import ContractLogicError, TransactionNotFound, TimeExhausted
+
 from .common import (
     w3,
     LOYALTY_POINTS_CONTRACT_ADDRESS,
@@ -11,7 +14,6 @@ from .common import (
     get_from_ipfs,
     Tags
 )
-import ipfshttpclient
 
 app = APIRouter()
 
