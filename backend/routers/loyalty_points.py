@@ -84,13 +84,28 @@ def redeem_points_endpoint(to_address: str, points: int):
         raise HTTPException(status_code=500, detail=f"Server error: {str(e)}")
 
 
+# @app.get("/points-balance/{account_address}", tags=[Tags.LOYALTY_POINTS])
+# def get_points_balance(account_address: str):
+#     try:
+#         contract = w3.eth.contract(address=LOYALTY_POINTS_CONTRACT_ADDRESS, abi=LOYALTY_POINTS_ABI)
+#         points, ipfs_hash = contract.functions.getPointsBalance(account_address).call()
+#         if not ipfs_hash:
+#             raise HTTPException(status_code=404, detail="IPFS hash not found")
+#         metadata = get_from_ipfs(ipfs_hash)
+#         return {"points": points, "ipfs_hash": ipfs_hash, "metadata": json.loads(metadata)}
+#     except exceptions.ContractLogicError as e:
+#         raise HTTPException(status_code=400, detail=f"Contract error: {str(e)}")
+#     except Exception as e:
+#         raise HTTPException(status_code=500, detail=f"Server error: {str(e)}")
+
 @app.get("/points-balance/{account_address}", tags=[Tags.LOYALTY_POINTS])
 def get_points_balance(account_address: str):
     try:
         contract = w3.eth.contract(address=LOYALTY_POINTS_CONTRACT_ADDRESS, abi=LOYALTY_POINTS_ABI)
         points, ipfs_hash = contract.functions.getPointsBalance(account_address).call()
         if not ipfs_hash:
-            raise HTTPException(status_code=404, detail="IPFS hash not found")
+            # If IPFS hash is not found, return 0 points
+            return {"points": 0, "ipfs_hash": "", "metadata": {}}
         metadata = get_from_ipfs(ipfs_hash)
         return {"points": points, "ipfs_hash": ipfs_hash, "metadata": json.loads(metadata)}
     except exceptions.ContractLogicError as e:
