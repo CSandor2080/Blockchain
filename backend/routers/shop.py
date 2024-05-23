@@ -1,13 +1,14 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Query
 from web3 import Web3, exceptions
 from .common import w3, SHOP_CONTRACT_ADDRESS, SHOP_ABI
 from .loyalty_points import issue_points_endpoint, redeem_points_endpoint, get_points_balance, upload_to_ipfs
 import json
-
+count = 7
 app = APIRouter()
 
 @app.post("/add-product", tags=["Shop"])
 def add_product(name: str, price: float):
+    global count
     try:
         contract = w3.eth.contract(address=SHOP_CONTRACT_ADDRESS, abi=SHOP_ABI)
         price_in_wei = w3.to_wei(price, 'ether')
@@ -25,6 +26,8 @@ def add_product(name: str, price: float):
 
         product_id = logs[0]['args']['productId']
 
+        count += 1
+
         return {
             "status": "success",
             "transaction_hash": tx_receipt.transactionHash.hex(),
@@ -35,12 +38,13 @@ def add_product(name: str, price: float):
 
 
 @app.post("/buy-product/{product_id}", tags=["Shop"])
-def buy_product(product_id: int, buyer_address: str, use_points: bool = False):
+def buy_product(product_id: int, buyer_address: str = Query(...), use_points: bool = Query(False)):
+    print(f"Received request to buy product {product_id} by {buyer_address} using points: {use_points}")
     try:
-        # Inițializare contract
+        # Initialize contract
         contract = w3.eth.contract(address=SHOP_CONTRACT_ADDRESS, abi=SHOP_ABI)
 
-        # Obținerea detaliilor produsului
+        # Fetch product details
         product = contract.functions.getProduct(product_id).call()
         name = product[0]
         price_in_wei = product[1]
@@ -49,13 +53,15 @@ def buy_product(product_id: int, buyer_address: str, use_points: bool = False):
         discount = 0
         if use_points:
             points_balance = get_points_balance(buyer_address)["points"]
+            print(f"User {buyer_address} has {points_balance} loyalty points.")
             max_discount = total_price * 90 // 100  # Maximum discount is 90% of the total price
             discount = min(points_balance, max_discount)  # Discount cannot exceed the max discount
             total_price -= discount
 
-            # Arderea punctelor folosite
+            # Burn used points
             try:
                 response = redeem_points_endpoint(buyer_address, discount)
+                print(f"Redeem points response: {response}")
                 if "status" not in response or response["status"] != "success":
                     print(f"Failed to redeem points: {response}")
                     raise HTTPException(status_code=500, detail=f"Failed to redeem points: {response.get('detail', 'Unknown error')}")
@@ -64,7 +70,7 @@ def buy_product(product_id: int, buyer_address: str, use_points: bool = False):
                 print(f"Error redeeming points: {str(e)}")
                 raise HTTPException(status_code=500, detail=f"Error redeeming points: {str(e)}")
 
-        # Executarea tranzacției de cumpărare
+        # Execute buy transaction
         try:
             tx_hash = contract.functions.buyProduct(product_id, use_points).transact({
                 'from': buyer_address,
@@ -80,14 +86,15 @@ def buy_product(product_id: int, buyer_address: str, use_points: bool = False):
             print(f"Transaction error: {str(e)}")
             raise HTTPException(status_code=500, detail=f"Transaction failed: {str(e)}")
 
-        # Calcularea punctelor de loialitate câștigate la prețul original (fără discount)
+        # Calculate earned loyalty points on the original price (no discount)
         loyalty_points_earned = (5 * price_in_wei) // 100  # 5% loyalty points in Wei
         metadata = {"address": buyer_address, "points": loyalty_points_earned}
         ipfs_hash = upload_to_ipfs(json.dumps(metadata))
 
-        # Emiterea punctelor câștigate
+        # Issue earned points
         try:
             response = issue_points_endpoint(buyer_address, loyalty_points_earned)
+            print(f"Issue points response: {response}")
             if "status" not in response or response["status"] != "success":
                 print(f"Failed to issue points: {response}")
                 raise HTTPException(status_code=500, detail=f"Failed to issue points: {response.get('detail', 'Unknown error')}")
@@ -120,6 +127,25 @@ def get_product(product_id: int):
             "name": name,
             "price": price_in_eth
         }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Server error: {str(e)}")
+
+
+@app.get("/get-products", tags=["Shop"])
+def get_products():
+    try:
+        contract = w3.eth.contract(address=SHOP_CONTRACT_ADDRESS, abi=SHOP_ABI)
+        product_count = 2
+        products = []
+        for product_id in range(count):
+            name, price_in_wei = contract.functions.getProduct(product_id).call()
+            price_in_eth = w3.from_wei(price_in_wei, 'ether')
+            products.append({
+                "product_id": product_id,
+                "name": name,
+                "price": price_in_eth
+            })
+        return products
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Server error: {str(e)}")
 
