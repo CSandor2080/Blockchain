@@ -15,7 +15,9 @@ from fastapi import FastAPI, HTTPException, Path
 
 #from routers.beverage_contract import BEVERAGE_ROUTER
 from routers.loyalty_points import LOYALTY_POINTS_ROUTER
-from routers.wallet_ballance import WALLET_BALANCE_ROUTER
+from routers.wallet_balance import WALLET_BALANCE_ROUTER
+from routers.shop import SHOP_ROUTER
+
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -39,6 +41,8 @@ def redirect():
     return RedirectResponse("/docs")
 
 
+
+app.include_router(SHOP_ROUTER)
 app.include_router(WALLET_BALANCE_ROUTER)
 app.include_router(LOYALTY_POINTS_ROUTER)
 
@@ -48,6 +52,5 @@ if __name__ == "__main__":
     uvicorn.run(
         host='127.0.0.1',
         port=8080,
-        app="main:app",
-        reload=True
+        app="main:app"
     )
