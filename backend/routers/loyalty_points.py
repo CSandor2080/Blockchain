@@ -15,15 +15,18 @@ import ipfshttpclient
 
 app = APIRouter()
 
+
 def upload_to_ipfs(data):
     client = ipfshttpclient.connect('/dns/localhost/tcp/5001/http')
     res = client.add_str(data)
     print(f"IPFS add_json response: {res}")
     return res
 
+
 def get_from_ipfs(ipfs_hash):
     client = ipfshttpclient.connect('/dns/localhost/tcp/5001/http')
     return client.cat(ipfs_hash).decode('utf-8')
+
 
 @app.post("/issue-points/{to_address}/{points}", tags=[Tags.LOYALTY_POINTS])
 def issue_points_endpoint(to_address: str, points: int):
@@ -44,8 +47,9 @@ def issue_points_endpoint(to_address: str, points: int):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Server error: {str(e)}")
 
+
 @app.post("/redeem-points/{to_address}/{points}", tags=[Tags.LOYALTY_POINTS])
-async def redeem_points_endpoint(to_address: str, points: int):
+def redeem_points_endpoint(to_address: str, points: int):
     try:
         contract = w3.eth.contract(address=LOYALTY_POINTS_CONTRACT_ADDRESS, abi=LOYALTY_POINTS_ABI)
         current_points, _ = contract.functions.getPointsBalance(to_address).call()
@@ -79,6 +83,7 @@ async def redeem_points_endpoint(to_address: str, points: int):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Server error: {str(e)}")
 
+
 @app.get("/points-balance/{account_address}", tags=[Tags.LOYALTY_POINTS])
 def get_points_balance(account_address: str):
     try:
@@ -93,6 +98,7 @@ def get_points_balance(account_address: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Server error: {str(e)}")
 
+
 @app.post("/upload-data-ipfs", tags=[Tags.IPFS])
 def upload_data_to_ipfs(data: str):
     try:
@@ -101,6 +107,7 @@ def upload_data_to_ipfs(data: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"IPFS upload error: {str(e)}")
 
+
 @app.get("/get-data-ipfs/{ipfs_hash}", tags=[Tags.IPFS])
 def get_data_from_ipfs(ipfs_hash: str):
     try:
@@ -108,5 +115,6 @@ def get_data_from_ipfs(ipfs_hash: str):
         return {"data": data}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"IPFS retrieval error: {str(e)}")
+
 
 LOYALTY_POINTS_ROUTER = app
