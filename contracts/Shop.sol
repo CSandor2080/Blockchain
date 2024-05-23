@@ -6,11 +6,11 @@ import "./LoyaltyPoints.sol";
 contract Shop is LoyaltyPoints {
     struct Product {
         string name;
-        uint256 price; // Price in wei
+        uint256 price;
     }
 
     Product[] public products;
-    uint256 public constant LOYALTY_RATE = 5; // 5% loyalty points
+    uint256 public constant LOYALTY_RATE = 5;
 
     event ProductAdded(uint256 productId, string name, uint256 price);
     event ProductPurchased(address indexed buyer, uint256 productId, uint256 price, uint256 loyaltyPointsEarned);

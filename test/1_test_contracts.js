@@ -1,84 +1,123 @@
+const Shop = artifacts.require("Shop");
 const LoyaltyPoints = artifacts.require("LoyaltyPoints");
 
-contract("LoyaltyPoints", accounts => {
+contract("Shop", (accounts) => {
+    let shop;
     const owner = accounts[0];
-    const customer = accounts[1];
-    const anotherAccount = accounts[2];
-
-    let loyaltyPoints;
+    const buyer = accounts[1];
 
     beforeEach(async () => {
-        loyaltyPoints = await LoyaltyPoints.new(owner);
+        shop = await Shop.new(owner, { from: owner });
     });
 
-    it("should be deployed and initialized with correct owner", async () => {
-        const contractOwner = accounts[0]
-        assert.equal(contractOwner, owner, "Owner is not set correctly");
+    it("should allow the owner to add a product", async () => {
+        const name = "Product 1";
+        const price = web3.utils.toWei("1", "ether");
+
+        await shop.addProduct(name, price, { from: owner });
+
+        const product = await shop.getProduct(0);
+        assert.equal(product.name, name, "Product name mismatch");
+        assert.equal(product.price, price, "Product price mismatch");
+
+        const productAddedEvent = await shop.getPastEvents("ProductAdded", {
+            fromBlock: 0,
+            toBlock: "latest",
+        });
+        assert.equal(productAddedEvent.length, 1, "ProductAdded event not emitted");
+        assert.equal(productAddedEvent[0].returnValues.productId, 0, "Product ID mismatch");
+        assert.equal(productAddedEvent[0].returnValues.name, name, "Event product name mismatch");
+        assert.equal(productAddedEvent[0].returnValues.price, price, "Event product price mismatch");
     });
 
-    it("should not redeem more points than available", async () => {
-        const points = 50;
-        const redeemPoints = 100;
-        const ipfsHash = "QmHash";
+    it("should allow a buyer to purchase a product without loyalty points", async () => {
+        const name = "Product 2";
+        const price = web3.utils.toWei("2", "ether");
 
-        await loyaltyPoints.issuePoints(customer, points, ipfsHash, { from: owner });
+        await shop.addProduct(name, price, { from: owner });
 
-        try {
-            await loyaltyPoints.redeemPoints(customer, redeemPoints, ipfsHash, { from: owner });
-            assert.fail("Redeemed more points than available");
-        } catch (error) {
-            assert(error.message.includes("Insufficient points"), "Expected insufficient points error");
-        }
+        const initialOwnerBalance = await web3.eth.getBalance(owner);
+        const initialBuyerBalance = await web3.eth.getBalance(buyer);
+
+        const tx = await shop.buyProduct(0, false, { from: buyer, value: price });
+
+        const finalOwnerBalance = await web3.eth.getBalance(owner);
+        const finalBuyerBalance = await web3.eth.getBalance(buyer);
+
+        assert.equal(
+            web3.utils.toBN(finalOwnerBalance).toString(),
+            web3.utils.toBN(initialOwnerBalance).add(web3.utils.toBN(price)).toString(),
+            "Owner balance mismatch"
+        );
+        assert.isBelow(
+            Number(finalBuyerBalance),
+            Number(initialBuyerBalance) - Number(price),
+            "Buyer balance mismatch"
+        );
+
+        const loyaltyPointsEarned = (price * 5) / 100;
+        const buyerLoyaltyPoints = await shop.pointsBalance(buyer);
+        assert.equal(
+            buyerLoyaltyPoints.points.toString(),
+            loyaltyPointsEarned.toString(),
+            "Loyalty points mismatch"
+        );
+
+        const productPurchasedEvent = await shop.getPastEvents("ProductPurchased", {
+            fromBlock: 0,
+            toBlock: "latest",
+        });
+        assert.equal(productPurchasedEvent.length, 1, "ProductPurchased event not emitted");
+        assert.equal(productPurchasedEvent[0].returnValues.buyer, buyer, "Event buyer address mismatch");
+        assert.equal(productPurchasedEvent[0].returnValues.productId, 0, "Event product ID mismatch");
+        assert.equal(productPurchasedEvent[0].returnValues.price, price, "Event product price mismatch");
+        assert.equal(productPurchasedEvent[0].returnValues.loyaltyPointsEarned, loyaltyPointsEarned, "Event loyalty points mismatch");
     });
 
-    it("should not allow non-owner to issue points", async () => {
-        const points = 100;
-        const ipfsHash = "QmHash";
+    it("should allow a buyer to purchase a product using loyalty points", async () => {
+        const name = "Product 3";
+        const price = web3.utils.toWei("3", "ether");
 
-        try {
-            await loyaltyPoints.issuePoints(customer, points, ipfsHash, { from: anotherAccount });
-            assert.fail("Non-owner was able to issue points");
-        } catch (error) {
-            assert(error.message.includes("Only the owner can perform this action"), "Expected owner restriction error");
-        }
-    });
+        await shop.addProduct(name, price, { from: owner });
 
-    it("should not allow non-owner to redeem points", async () => {
-        const points = 50;
-        const ipfsHash = "QmHash";
+        // Issue loyalty points to the buyer
+        await shop.issuePoints(buyer, web3.utils.toWei("1", "ether"), "QmTestHash", { from: owner });
 
-        try {
-            await loyaltyPoints.redeemPoints(customer, points, ipfsHash, { from: anotherAccount });
-            assert.fail("Non-owner was able to redeem points");
-        } catch (error) {
-            assert(error.message.includes("Only the owner can perform this action"), "Expected owner restriction error");
-        }
-    });
+        const initialOwnerBalance = await web3.eth.getBalance(owner);
+        const initialBuyerBalance = await web3.eth.getBalance(buyer);
 
-    it("should emit PointsIssued event when points are issued", async () => {
-        const points = 100;
-        const ipfsHash = "QmHash";
+        const tx = await shop.buyProduct(0, true, { from: buyer, value: price });
 
-        const result = await loyaltyPoints.issuePoints(customer, points, ipfsHash, { from: owner });
+        const finalOwnerBalance = await web3.eth.getBalance(owner);
+        const finalBuyerBalance = await web3.eth.getBalance(buyer);
 
-        assert.equal(result.logs.length, 1, "Expected one event to be emitted");
-        assert.equal(result.logs[0].event, "PointsIssued", "Expected PointsIssued event");
-        assert.equal(result.logs[0].args.customer, customer, "Customer address is incorrect in event");
-        assert.equal(result.logs[0].args.points.toNumber(), points, "Points value is incorrect in event");
-        assert.equal(result.logs[0].args.ipfsHash, ipfsHash, "IPFS hash is incorrect in event");
-    });
+        assert.equal(
+            web3.utils.toBN(finalOwnerBalance).toString(),
+            web3.utils.toBN(initialOwnerBalance).add(web3.utils.toBN(price).sub(web3.utils.toBN(web3.utils.toWei("1", "ether")))).toString(),
+            "Owner balance mismatch"
+        );
+        assert.isBelow(
+            Number(finalBuyerBalance),
+            Number(initialBuyerBalance) - Number(price) + Number(web3.utils.toWei("1", "ether")),
+            "Buyer balance mismatch"
+        );
 
-    it("should emit PointsRedeemed event when points are redeemed", async () => {
-        const points = 100;
-        const ipfsHash = "QmHash";
+        const loyaltyPointsEarned = (price * 5) / 100;
+        const buyerLoyaltyPoints = await shop.pointsBalance(buyer);
+        assert.equal(
+            buyerLoyaltyPoints.points.toString(),
+            loyaltyPointsEarned.toString(),
+            "Loyalty points mismatch"
+        );
 
-        await loyaltyPoints.issuePoints(customer, points, ipfsHash, { from: owner });
-        const result = await loyaltyPoints.redeemPoints(customer, points, ipfsHash, { from: owner });
-
-        assert.equal(result.logs.length, 1, "Expected one event to be emitted");
-        assert.equal(result.logs[0].event, "PointsRedeemed", "Expected PointsRedeemed event");
-        assert.equal(result.logs[0].args.customer, customer, "Customer address is incorrect in event");
-        assert.equal(result.logs[0].args.points.toNumber(), points, "Points value is incorrect in event");
-        assert.equal(result.logs[0].args.ipfsHash, ipfsHash, "IPFS hash is incorrect in event");
+        const productPurchasedEvent = await shop.getPastEvents("ProductPurchased", {
+            fromBlock: 0,
+            toBlock: "latest",
+        });
+        assert.equal(productPurchasedEvent.length, 1, "ProductPurchased event not emitted");
+        assert.equal(productPurchasedEvent[0].returnValues.buyer, buyer, "Event buyer address mismatch");
+        assert.equal(productPurchasedEvent[0].returnValues.productId, 0, "Event product ID mismatch");
+        assert.equal(productPurchasedEvent[0].returnValues.price, price, "Event product price mismatch");
+        assert.equal(productPurchasedEvent[0].returnValues.loyaltyPointsEarned, loyaltyPointsEarned, "Event loyalty points mismatch");
     });
 });

@@ -28,6 +28,23 @@ document.addEventListener("DOMContentLoaded", async () => {
         walletsPage.classList.remove("hidden");
     });
 
+    const getIcon = (productType) => {
+        switch (productType) {
+            case 'coffee':
+                return '<span class="material-icons">local_cafe</span>';
+            case 'beer':
+                return '<span class="material-icons">sports_bar</span>';
+            case 'burger':
+                return '<span class="material-icons">fastfood</span>';
+            case 'pasta':
+                return '<span class="material-icons">restaurant</span>';
+            case 'pizza':
+                return '<span class="material-icons">local_pizza</span>';
+            default:
+                return '<span class="material-icons">shopping_cart</span>';
+        }
+    };
+
     const fetchProducts = async () => {
         try {
             const response = await axios.get("http://127.0.0.1:8080/get-products");
@@ -36,7 +53,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                 const productCard = document.createElement("div");
                 productCard.className = "bg-white p-6 rounded-lg shadow-lg";
                 productCard.innerHTML = `
-                    <h3 class="text-xl font-bold mb-2">${product.name}</h3>
+                    <div class="flex items-center mb-4">
+                        ${getIcon(product.product_type)}
+                        <h3 class="text-xl font-bold ml-2">${product.name}</h3>
+                    </div>
                     <p class="text-gray-700 mb-4">${product.price} ETH</p>
                     <button class="bg-blue-600 text-white px-4 py-2 rounded buy-button" data-id="${product.product_id}">Buy</button>
                 `;
