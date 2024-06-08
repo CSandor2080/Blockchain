@@ -1,21 +1,18 @@
 const LoyaltyPoints = artifacts.require("LoyaltyPoints");
-const BeverageContract = artifacts.require("BeverageContract");
+const Shop = artifacts.require("Shop");
 
 module.exports = async function (deployer, network, accounts) {
     const ownerAddress = accounts[0]; // Use the first account as the owner
 
-    // Deploy LoyaltyPoints contract with a dummy address for beverageContractAddress
+    // Deploy LoyaltyPoints contract
     await deployer.deploy(LoyaltyPoints, ownerAddress);
     const loyaltyPointsInstance = await LoyaltyPoints.deployed();
 
-    // Deploy BeverageContract with the address of the deployed LoyaltyPoints contract
-    // await deployer.deploy(BeverageContract, ownerAddress, ownerAddress);
-    // const beverageContractInstance = await BeverageContract.deployed();
-
-    // Update the LoyaltyPoints contract to set the correct beverageContractAddress
-    //await loyaltyPointsInstance.setBeverageContract(beverageContractInstance.address);
+    // Deploy Shop contract with the address of the deployed LoyaltyPoints contract
+    await deployer.deploy(Shop, ownerAddress);
+    const shopInstance = await Shop.deployed();
 
     console.log('Deployment successful');
     console.log('LoyaltyPoints address:', loyaltyPointsInstance.address);
-    //console.log('BeverageContract address:', beverageContractInstance.address);
+    console.log('Shop address:', shopInstance.address);
 };

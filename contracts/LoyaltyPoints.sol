@@ -13,7 +13,7 @@ contract LoyaltyPoints is RewardSystem {
     }
 
     mapping(address => PointsData) public pointsBalance;
-    address private owner;
+    address public  owner;
 
     event PointsIssued(address indexed customer, uint256 points, string ipfsHash);
     event PointsRedeemed(address indexed customer, uint256 points, string ipfsHash);

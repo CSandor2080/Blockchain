@@ -2,40 +2,72 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Loyalty Points System</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop and Wallets</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 <body class="bg-gray-100">
-    <div class="flex h-screen">
-        <!-- Navigation -->
-        <nav class="bg-white shadow-lg p-6 w-64">
-            <h1 class="text-2xl font-bold mb-6">Menu</h1>
-            <ul>
-                <li class="mb-4">
-                    <a href="wallets.html" class="flex items-center p-3 text-lg font-medium text-gray-700 hover:bg-gray-200 rounded">
-                        <span class="material-icons mr-3">account_balance_wallet</span> Wallet & Balance
-                    </a>
-                </li>
-                <li class="mb-4">
-                    <a href="beverages.html" class="flex items-center p-3 text-lg font-medium text-gray-700 hover:bg-gray-200 rounded">
-                        <span class="material-icons mr-3">local_cafe</span> Beverages
-                    </a>
-                </li>
-                <li>
-                    <a href="loyalty_points.html" class="flex items-center p-3 text-lg font-medium text-gray-700 hover:bg-gray-200 rounded">
-                        <span class="material-icons mr-3">stars</span> Loyalty Points
-                    </a>
-                </li>
-            </ul>
-        </nav>
 
-        <!-- Main Content -->
-        <div id="content" class="flex-1 p-8">
-            <!-- This will hold the main content -->
-            <h1 class="text-4xl font-bold mb-8">Welcome to the Loyalty Points System</h1>
-            <p class="text-lg">Use the navigation menu to access different sections.</p>
+    <!-- Navbar -->
+    <nav class="bg-blue-600 p-4 text-white">
+        <div class="container mx-auto flex justify-between">
+            <div class="text-2xl font-bold">Shop and Wallets</div>
+            <div>
+                <button id="shopTab" class="px-4 py-2 focus:outline-none">Shop</button>
+                <button id="walletsTab" class="px-4 py-2 focus:outline-none">Wallets</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Shop Page -->
+    <main id="shopPage" class="container mx-auto mt-8">
+        <div id="product-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Product cards will be appended here by JavaScript -->
+        </div>
+    </main>
+
+    <!-- Wallets Page -->
+    <main id="walletsPage" class="container mx-auto mt-8 hidden">
+        <div class="bg-white p-6 rounded-lg shadow-lg">
+            <h2 class="text-2xl font-bold mb-4">Wallet Information</h2>
+            <div class="mb-4">
+                <label for="walletAddress" class="block text-sm font-medium text-gray-700">Wallet Address</label>
+                <input type="text" id="walletAddress" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+            </div>
+            <div class="flex justify-end">
+                <button id="getWalletInfoButton" class="bg-blue-600 text-white px-4 py-2 rounded">Get Info</button>
+            </div>
+        </div>
+        <div id="walletInfo" class="mt-4 hidden">
+            <h3 class="text-xl font-bold">Wallet Info</h3>
+            <p>ETH Balance: <span id="ethBalance"></span></p>
+            <p>Loyalty Points: <span id="loyaltyPoints"></span></p>
+        </div>
+    </main>
+
+    <!-- Buy Product Modal -->
+    <div id="buyModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50">
+        <div class="bg-white p-6 rounded shadow-lg">
+            <h2 class="text-2xl mb-4">Buy Product</h2>
+            <div class="mb-4">
+                <label for="buyerAddress" class="block text-sm font-medium text-gray-700">Buyer Address</label>
+                <input type="text" id="buyerAddress" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+            </div>
+            <div class="mb-4">
+                <label class="inline-flex items-center">
+                    <input type="checkbox" id="usePoints" class="form-checkbox">
+                    <span class="ml-2">Use Loyalty Points</span>
+                </label>
+            </div>
+            <div class="flex justify-end">
+                <button id="cancelButton" class="bg-gray-500 text-white px-4 py-2 rounded mr-2">Cancel</button>
+                <button id="confirmButton" class="bg-blue-600 text-white px-4 py-2 rounded">Confirm</button>
+            </div>
         </div>
     </div>
+
+    <script src="script.js"></script>
 </body>
 </html>

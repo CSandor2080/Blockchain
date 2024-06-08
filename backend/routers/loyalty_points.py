@@ -1,29 +1,38 @@
 import json
+
 from fastapi import APIRouter, HTTPException
-from web3.exceptions import ContractLogicError, TransactionNotFound, TimeExhausted
+
+import ipfshttpclient
 from web3 import Web3, exceptions
-from routers.common import (
+from web3.exceptions import ContractLogicError, TransactionNotFound, TimeExhausted
+
+from .common import (
     w3,
     LOYALTY_POINTS_CONTRACT_ADDRESS,
     LOYALTY_POINTS_ABI,
     upload_to_ipfs,
-    get_from_ipfs
+    get_from_ipfs,
+    Tags
 )
-import  ipfshttpclient
+
 app = APIRouter()
+
+
 def upload_to_ipfs(data):
     client = ipfshttpclient.connect('/dns/localhost/tcp/5001/http')
     res = client.add_str(data)
-    print(f"######################IPFS add_json response: {res}")
+    print(f"IPFS add_json response: {res}")
     return res
+
 
 def get_from_ipfs(ipfs_hash):
     client = ipfshttpclient.connect('/dns/localhost/tcp/5001/http')
     return client.cat(ipfs_hash).decode('utf-8')
 
-@app.post("/issue-points/{to_address}/{points}")
+
+@app.post("/issue-points/{to_address}/{points}", tags=[Tags.LOYALTY_POINTS])
 def issue_points_endpoint(to_address: str, points: int):
-    #try:
+    try:
         contract = w3.eth.contract(address=LOYALTY_POINTS_CONTRACT_ADDRESS, abi=LOYALTY_POINTS_ABI)
         current_points, _ = contract.functions.getPointsBalance(to_address).call()
         new_points = current_points + points
@@ -37,11 +46,12 @@ def issue_points_endpoint(to_address: str, points: int):
         if tx_receipt.status == 0:
             raise HTTPException(status_code=500, detail="Transaction failed to execute.")
         return {"status": "success", "ipfs_hash": ipfs_hash}
-    # except Exception as e:
-    #     raise HTTPException(status_code=500, detail=f"Server error: {str(e)}")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Server error: {str(e)}")
 
-@app.post("/redeem-points/{to_address}/{points}")
-async def redeem_points_endpoint(to_address: str, points: int):
+
+@app.post("/redeem-points/{to_address}/{points}", tags=[Tags.LOYALTY_POINTS])
+def redeem_points_endpoint(to_address: str, points: int):
     try:
         contract = w3.eth.contract(address=LOYALTY_POINTS_CONTRACT_ADDRESS, abi=LOYALTY_POINTS_ABI)
         current_points, _ = contract.functions.getPointsBalance(to_address).call()
@@ -75,13 +85,29 @@ async def redeem_points_endpoint(to_address: str, points: int):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Server error: {str(e)}")
 
-@app.get("/points-balance/{account_address}")
+
+# @app.get("/points-balance/{account_address}", tags=[Tags.LOYALTY_POINTS])
+# def get_points_balance(account_address: str):
+#     try:
+#         contract = w3.eth.contract(address=LOYALTY_POINTS_CONTRACT_ADDRESS, abi=LOYALTY_POINTS_ABI)
+#         points, ipfs_hash = contract.functions.getPointsBalance(account_address).call()
+#         if not ipfs_hash:
+#             raise HTTPException(status_code=404, detail="IPFS hash not found")
+#         metadata = get_from_ipfs(ipfs_hash)
+#         return {"points": points, "ipfs_hash": ipfs_hash, "metadata": json.loads(metadata)}
+#     except exceptions.ContractLogicError as e:
+#         raise HTTPException(status_code=400, detail=f"Contract error: {str(e)}")
+#     except Exception as e:
+#         raise HTTPException(status_code=500, detail=f"Server error: {str(e)}")
+
+@app.get("/points-balance/{account_address}", tags=[Tags.LOYALTY_POINTS])
 def get_points_balance(account_address: str):
     try:
         contract = w3.eth.contract(address=LOYALTY_POINTS_CONTRACT_ADDRESS, abi=LOYALTY_POINTS_ABI)
         points, ipfs_hash = contract.functions.getPointsBalance(account_address).call()
         if not ipfs_hash:
-            raise HTTPException(status_code=404, detail="IPFS hash not found")
+            # If IPFS hash is not found, return 0 points
+            return {"points": 0, "ipfs_hash": "", "metadata": {}}
         metadata = get_from_ipfs(ipfs_hash)
         return {"points": points, "ipfs_hash": ipfs_hash, "metadata": json.loads(metadata)}
     except exceptions.ContractLogicError as e:
@@ -89,7 +115,8 @@ def get_points_balance(account_address: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Server error: {str(e)}")
 
-@app.post("/upload-data-ipfs")
+
+@app.post("/upload-data-ipfs", tags=[Tags.IPFS])
 def upload_data_to_ipfs(data: str):
     try:
         ipfs_hash = upload_to_ipfs(data)
@@ -97,7 +124,8 @@ def upload_data_to_ipfs(data: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"IPFS upload error: {str(e)}")
 
-@app.get("/get-data-ipfs/{ipfs_hash}")
+
+@app.get("/get-data-ipfs/{ipfs_hash}", tags=[Tags.IPFS])
 def get_data_from_ipfs(ipfs_hash: str):
     try:
         data = get_from_ipfs(ipfs_hash)
@@ -105,4 +133,5 @@ def get_data_from_ipfs(ipfs_hash: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"IPFS retrieval error: {str(e)}")
 
-LOYALTY_POINTS_ROUTER =app
+
+LOYALTY_POINTS_ROUTER = app
